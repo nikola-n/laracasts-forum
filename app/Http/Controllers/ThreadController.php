@@ -17,11 +17,17 @@ class ThreadController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param \App\Channel $channel
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(Channel $channel)
     {
-        $threads = Thread::latest()->get();
+        if ($channel->exists) {
+            $threads   = $channel->threads()->latest()->get();
+        } else {
+            $threads = Thread::latest()->get();
+        }
 
         return view('threads.index', compact('threads'));
     }
