@@ -14,33 +14,30 @@ class CreateThreadsTest extends TestCase
     /** @test */
     public function guests_may_not_create_a_thread()
     {
-        $this->withoutExceptionHandling();
-        $this->expectException(AuthenticationException::class);
+        $this->withExceptionHandling();
 
-        $thread = make(Thread::class);
+        $this->post('/threads')
+            ->assertRedirect('/login');
 
-        $this->post('/threads', $thread->toArray());
+        $this->get('/threads/create')
+            ->assertRedirect('/login');
     }
 
     /** @test */
     public function an_authenticated_user_can_create_a_new_forum_thread()
     {
+        $this->withoutExceptionHandling();
         //given we have a signed in user
         $this->signIn();
         //when we hit the endpoint to create a new thread
         //then we visit the thread page
-        $thread = make(Thread::class);
+        $thread = create(Thread::class);
+
         $this->post('/threads', $thread->toArray());
-        $response = $this->get($thread->path())
-        //we should see the new thread-
-        ->assertSee($thread->title)
-            ->assertSee($thread->body);
-    }
-    /** @test */
-    public function guests_cannot_see_the_create_thread_page()
-    {
-        $this->withExceptionHandling();
-        $this->get('/threads/create')
-            ->assertRedirect('/login');
+        $this->get($thread->path())
+            //we should see the new thread-
+            ->assertSee($thread->title)
+            ->assertSee($thread->body)
+            ->assertSee($thread->channel_id);
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Reply;
+use App\Thread;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -13,7 +14,7 @@ class ReadThreadsTest extends TestCase {
     {
         parent::setUp();
 
-        $this->thread = factory('App\Thread')->create();
+        $this->thread = create(Thread::class);
 
     }
 
@@ -27,17 +28,18 @@ class ReadThreadsTest extends TestCase {
     /** @test */
     public function a_user_can_read_single_thread()
     {
-        $this->get('/threads/' . $this->thread->id)
+        $this->withoutExceptionHandling();
+        $this->get($this->thread->path())
             ->assertSee($this->thread->title);
     }
 
     /** @test */
     public function a_user_can_read_replies_that_are_associate_with_a_thread()
     {
-        $reply = factory(Reply::class)
-            ->create(['thread_id' => $this->thread->id]);
+        $this->withoutExceptionHandling();
+        $reply = create(Reply::class,['thread_id' => $this->thread->id]);
 
-        $this->get('/threads')->assertStatus(200);
+        $this->get($this->thread->path())->assertStatus(200);
     }
 
 }

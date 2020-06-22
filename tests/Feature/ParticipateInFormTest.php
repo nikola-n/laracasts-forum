@@ -19,18 +19,20 @@ class ParticipateInFormTest extends TestCase
     {
         $this->expectException(AuthenticationException::class);
         $this->withoutExceptionHandling();
-        $this->post('threads/1/replies', []);
+        $this->post('threads/some-channel/1/replies', [])
+        ->assertRedirect('/login');
     }
 
     /** @test */
     public function an_auth_user_may_participate_in_forum_threads()
     {
         //we have auth user
-        $this->be(factory(User::class)->create());
+        $this->signIn();
         //and an existing thread
-        $thread = factory(Thread::class)->create();
+        $thread = create(Thread::class);
         //when the user adds a reply to the thread
-        $reply= factory(Reply::class)->make();
+        $reply= make(Reply::class);
+
         $this->post($thread->path() .'/replies', $reply->toArray());
         //then their reply should be visible on the page
         $this->get($thread->path())

@@ -22,6 +22,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('threads', 'ThreadController');
-
-Route::post('/threads/{thread}/replies', 'ReplyController@store' )->name('replies.store');
+Route::get('threads', 'ThreadController@index')->name('threads.index');
+Route::get('threads/create', 'ThreadController@create')->name('threads.create');
+//laravel 7.x
+Route::get('threads/{channel:slug}/{thread}', 'ThreadController@show')->name('threads.show');
+Route::post('threads', 'ThreadController@store')->name('threads.store');
+Route::post('/threads/{channel:slug}/{thread}/replies', 'ReplyController@store' )->name('replies.store');
