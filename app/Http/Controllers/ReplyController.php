@@ -38,13 +38,19 @@ class ReplyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \App\Channel $channel
-     * @param Thread       $thread
+     * @param \App\Channel             $channel
+     * @param Thread                   $thread
+     *
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Channel $channel, Thread $thread)
+    public function store(Channel $channel, Thread $thread, Request $request)
     {
+        $this->validate($request, [
+            'body' => 'required'
+        ]);
         $thread->addReply([
             'body' => request('body'),
             'user_id' => auth()->id()
