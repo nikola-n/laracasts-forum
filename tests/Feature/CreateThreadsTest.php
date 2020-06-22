@@ -3,10 +3,8 @@
 namespace Tests\Feature;
 
 use App\Thread;
-use App\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CreateThreadsTest extends TestCase
@@ -37,5 +35,12 @@ class CreateThreadsTest extends TestCase
         //we should see the new thread-
         ->assertSee($thread->title)
             ->assertSee($thread->body);
+    }
+    /** @test */
+    public function guests_cannot_see_the_create_thread_page()
+    {
+        $this->withExceptionHandling();
+        $this->get('/threads/create')
+            ->assertRedirect('/login');
     }
 }
