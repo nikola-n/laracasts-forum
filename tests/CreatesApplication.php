@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\User;
 use Illuminate\Contracts\Console\Kernel;
 
 trait CreatesApplication
@@ -20,8 +21,11 @@ trait CreatesApplication
         return $app;
     }
 
-    public function signIn($user)
+    protected function signIn($user = null)
     {
+        $user = $user ?: create(User::class);
         $this->be($user);
+
+        return $this;
     }
 }
