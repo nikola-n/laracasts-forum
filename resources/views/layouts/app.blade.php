@@ -33,7 +33,8 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
-                    <a class="nav-link" href="{{ route('threads.index') }}">{{ __('All Threads') }}</a>
+                    <li><a class="nav-link" href="{{ route('threads.index') }}">{{ __('All Threads') }}</a></li>
+                    <li><a class="nav-link" href="{{ route('threads.create') }}">{{ __('New Thread') }}</a></li>
 
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -46,6 +47,7 @@
                         </div>
                     </div>
                 </ul>
+
 
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
