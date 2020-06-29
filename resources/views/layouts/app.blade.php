@@ -19,6 +19,20 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
+<style>
+    body {
+        padding-bottom: 100px;
+    }
+
+    .level {
+        display: flex;
+        align-items: center;
+    }
+
+    .flex {
+        flex: 1;
+    }
+</style>
 <body>
 <div id="app">
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
@@ -44,6 +58,7 @@
                                     <a class="nav-link" href="{{ route('threads.index') }}?by={{ auth()->user()->name }}">{{ __('My Threads') }}</a>
                                 @endauth
                             </li>
+                            <li class="nav-item"><a class="nav-link" href="/threads?popular=1"> Popular Threads</a></li>
                         </ul>
                     </div>
                 </div>

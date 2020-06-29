@@ -16,12 +16,14 @@
 
                         @foreach($threads as $thread)
                             <aticle>
-                                <h4>
-                                    <a href="{{ $thread->path() }}">{{ $thread->title }}</a>
-                                </h4>
-                                <div class="body">{{ $thread->body }}</div>
+                                <div class="level">
+                                    <h4 class="flex">
+                                        <a href="{{ $thread->path() }}">{{ $thread->title }}</a>
+                                    </h4>
+                                    <a href="{{ $thread->path() }}">{{ $thread->replies_count }} {{ Str::plural('reply', $thread->replies_count)}}</a>
+                                </div>
                             </aticle>
-
+                            <div class="body">{{ $thread->body }}</div>
                             <hr>
                         @endforeach
                     </div>

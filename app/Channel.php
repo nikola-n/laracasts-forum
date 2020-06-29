@@ -14,8 +14,8 @@ class Channel extends Model
     }
     //laravel 6.x
     //public function getRouteKeyName()
-    //{
-    //    return 'slug';
-    //}
+    //    //{
+    //    //    return 'slug';
+    //    //}
 }
 
