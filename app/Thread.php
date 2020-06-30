@@ -9,6 +9,11 @@ class Thread extends Model
 
     protected $guarded = [];
 
+    //if there are situations where you don't want to include
+    //creator you can't disable it
+    //then you use globalscopes
+    //Thread::withoutGlobalScopes()->first();
+    protected $with = ['creator', 'channel'];
 
     protected static function boot()
     {
@@ -17,6 +22,9 @@ class Thread extends Model
         static::addGlobalScope('replyCount', function ($builder) {
             $builder->withCount('replies');
         });
+        //static::addGlobalScope('creator', function ($builder) {
+        //    $builder->with('creator');
+        //});
     }
 
     public function path()
@@ -26,7 +34,7 @@ class Thread extends Model
 
     public function replies()
     {
-        return $this->hasMany(Reply::class)->withCount('favorites');
+        return $this->hasMany(Reply::class);
     }
 
     public function creator()
