@@ -26,6 +26,7 @@ Route::get('threads', 'ThreadController@index')->name('threads.index');
 Route::get('threads/create', 'ThreadController@create')->name('threads.create');
 //laravel 7.x
 Route::get('threads/{channel:slug}/{thread}', 'ThreadController@show')->name('threads.show');
+Route::delete('threads/{channel:slug}/{thread}', 'ThreadController@delete');
 Route::post('threads', 'ThreadController@store')->name('threads.store');
 Route::get('threads/{channel:slug}', 'ThreadController@index');
 Route::post('/threads/{channel:slug}/{thread}/replies', 'ReplyController@store' )->name('replies.store');

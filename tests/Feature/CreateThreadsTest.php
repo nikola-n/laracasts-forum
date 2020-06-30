@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Channel;
+use App\Reply;
 use App\Thread;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -48,22 +49,61 @@ class CreateThreadsTest extends TestCase
         $this->publishThread(['title' => null])
             ->assertSessionHasErrors('title');
     }
+
     /** @test */
     public function a_thread_requires_a_body()
     {
         $this->publishThread(['body' => null])
             ->assertSessionHasErrors('body');
     }
+
     /** @test */
     public function a_thread_requires_a_valid_channel()
     {
-        $channel = factory(Channel::class,2)->create();
+        $channel = factory(Channel::class, 2)->create();
 
         $this->publishThread(['channel_id' => null])
             ->assertSessionHasErrors('channel_id');
 
         $this->publishThread(['channel_id' => 999])
             ->assertSessionHasErrors('channel_id');
+    }
+
+    /** @test */
+    public function guests_cannot_delete_threads()
+    {
+        $this->withExceptionHandling();
+
+        $thread = create(Thread::class);
+
+        $response = $this->delete($thread->path());
+
+        $response->assertRedirect('/login');
+    }
+
+    /** @test */
+    public function a_thread_can_be_deleted()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->signIn();
+
+        $thread = create(Thread::class);
+
+        $reply = create(Reply::class, ['thread_id' => $thread->id]);
+
+        $response = $this->json('DELETE', $thread->path());
+
+        $response->assertStatus(204);
+
+        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+    }
+
+    /** @test */
+    public function threads_may_only_be_deleted_by_those_who_have_permission()
+    {
+
     }
 
     private function publishThread($overrides = [])
@@ -74,4 +114,5 @@ class CreateThreadsTest extends TestCase
 
         return $this->post('/threads', $thread->toArray());
     }
+
 }

@@ -28,7 +28,7 @@ class ThreadController extends Controller
     {
         $threads = $this->getThreads($channel, $filters);
 
-        if(request()->wantsJson()) {
+        if (request()->wantsJson()) {
             return $threads;
         }
         return view('threads.index', compact('threads'));
@@ -84,8 +84,8 @@ class ThreadController extends Controller
     public function show(Channel $channel, Thread $thread)
     {
         return view('threads.show', [
-            'thread' => $thread,
-            'replies' => $thread->replies()->paginate(10)
+            'thread'  => $thread,
+            'replies' => $thread->replies()->paginate(10),
         ]);
     }
 
@@ -117,13 +117,21 @@ class ThreadController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param \App\Channel $channel
+     * @param \App\Thread  $thread
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function delete(Channel $channel, Thread $thread)
     {
-        //
+        //if you don't add foreign key in db
+        //$thread->replies()->delete();
+        $thread->delete();
+        if (request()->wantsJson()) {
+            return response([], 204);
+        }
+        return redirect('/threads');
     }
 
     /**
