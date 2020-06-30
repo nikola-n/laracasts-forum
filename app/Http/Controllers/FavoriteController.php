@@ -18,11 +18,13 @@ class FavoriteController extends Controller
      *
      * @param \App\Reply $reply
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Reply $reply)
     {
-       return $reply->favorite();
+        $reply->favorite();
+
+        return back();
     }
 
 }
