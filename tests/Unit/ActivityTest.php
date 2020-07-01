@@ -29,7 +29,7 @@ class ActivityTest extends TestCase
 
         $activity = Activity::first();
 
-        $this->assertEquals($activity->subject->id,$thread->id);
+        $this->assertEquals($activity->subject->id, $thread->id);
     }
 
     /** @test */
@@ -40,5 +40,25 @@ class ActivityTest extends TestCase
         $reply = create(Reply::class);
 
         $this->assertEquals(2, Activity::count());
+    }
+
+    /** @test */
+    public function it_fetches_a_feed_for_any_user()
+    {
+        $this->signIn();
+
+        create(Thread::class, ['user_id' => auth()->id()],2);
+
+        auth()->user()->activity()->first()->update(['created_at' => now()->subWeek()]);
+
+        $feed = Activity::feed(auth()->user());
+
+        $this->assertTrue($feed->keys()->contains(
+            now()->format('Y-m-d')
+        ));
+
+        $this->assertTrue($feed->keys()->contains(
+            now()->subWeek()->format('Y-m-d')
+        ));
     }
 }
