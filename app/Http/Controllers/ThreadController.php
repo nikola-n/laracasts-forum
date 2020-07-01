@@ -132,6 +132,7 @@ class ThreadController extends Controller
         //}
         //if you don't add foreign key in db
         //$thread->replies()->delete();
+        $thread->replies->each->delete();
         $thread->delete();
         if (request()->wantsJson()) {
             return response([], 204);
