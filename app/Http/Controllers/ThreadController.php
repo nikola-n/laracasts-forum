@@ -125,6 +125,11 @@ class ThreadController extends Controller
      */
     public function delete(Channel $channel, Thread $thread)
     {
+
+        $this->authorize('update', $thread);
+        //if ($thread->user_id != auth()->id()) {
+        //    abort(403, 'You do not have permission to do this.');
+        //}
         //if you don't add foreign key in db
         //$thread->replies()->delete();
         $thread->delete();

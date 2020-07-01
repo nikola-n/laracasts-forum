@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
+    use RecordsActivity;
 
     protected $guarded = [];
 
@@ -23,7 +24,7 @@ class Thread extends Model
             $builder->withCount('replies');
         });
 
-        static::deleting(function($thread) {
+        static::deleting(function ($thread) {
             $thread->replies()->delete();
         });
         //static::addGlobalScope('creator', function ($builder) {
@@ -55,7 +56,6 @@ class Thread extends Model
     {
         $this->replies()->create($reply);
     }
-
 
     public function scopeFilter($query, $filters)
     {
