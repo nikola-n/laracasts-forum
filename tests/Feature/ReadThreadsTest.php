@@ -8,10 +8,11 @@ use App\Thread;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class ReadThreadsTest extends TestCase {
+class ReadThreadsTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -38,17 +39,18 @@ class ReadThreadsTest extends TestCase {
     public function a_user_can_read_replies_that_are_associate_with_a_thread()
     {
         $this->withoutExceptionHandling();
-        $reply = create(Reply::class,['thread_id' => $this->thread->id]);
+        $reply = create(Reply::class, ['thread_id' => $this->thread->id]);
 
         $this->get($this->thread->path())->assertStatus(200);
     }
+
     /** @test */
     public function a_user_can_filter_threads_according_to_a_channel()
     {
         $this->withoutExceptionHandling();
 
-        $channel = create(Channel::class);
-        $threadInChannel = create(Thread::class, ['channel_id' => $channel->id]);
+        $channel            = create(Channel::class);
+        $threadInChannel    = create(Thread::class, ['channel_id' => $channel->id]);
         $threadNotInChannel = create(Thread::class);
 
         $this->get('/threads/' . $channel->slug)
@@ -59,9 +61,9 @@ class ReadThreadsTest extends TestCase {
     /** @test */
     public function a_user_can_filter_threads_by_any_username()
     {
-        $this->signIn(create('App\User', ['name' => 'JohnDoe'] ));
+        $this->signIn(create('App\User', ['name' => 'JohnDoe']));
 
-        $threadByJohn = create(Thread::class, ['user_id' => auth()->id()]);
+        $threadByJohn    = create(Thread::class, ['user_id' => auth()->id()]);
         $threadNotByJohn = create(Thread::class);
 
         $this->get('/threads?by=JohnDoe')
@@ -69,12 +71,12 @@ class ReadThreadsTest extends TestCase {
             ->assertDontSee($threadNotByJohn->title);
 
     }
+
     /** @test */
     public function a_user_can_filter_threads_by_popularity()
     {
         $threadWithTwoReplies = create(Thread::class);
         create(Reply::class, ['thread_id' => $threadWithTwoReplies->id], 2);
-
 
         $threadWithThreeReplies = create(Thread::class);
         create(Reply::class, ['thread_id' => $threadWithThreeReplies->id], 3);
@@ -83,6 +85,6 @@ class ReadThreadsTest extends TestCase {
 
         $response = $this->getJson('threads?popular=1')->json();
 
-        $this->assertEquals([3,2,0],array_column($response, 'replies_count'));
+        $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));
     }
 }

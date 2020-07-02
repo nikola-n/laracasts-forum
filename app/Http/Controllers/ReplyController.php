@@ -96,11 +96,17 @@ class ReplyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Reply  $reply
-     * @return \Illuminate\Http\Response
+     * @param \App\Reply $reply
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Reply $reply)
     {
-        //
+       $this->authorize('update', $reply);
+
+        $reply->delete();
+
+        return back();
     }
 }

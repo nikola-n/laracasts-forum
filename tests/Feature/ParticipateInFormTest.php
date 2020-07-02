@@ -20,7 +20,7 @@ class ParticipateInFormTest extends TestCase
         $this->expectException(AuthenticationException::class);
         $this->withoutExceptionHandling();
         $this->post('threads/some-channel/1/replies', [])
-        ->assertRedirect('/login');
+            ->assertRedirect('/login');
     }
 
     /** @test */
@@ -31,9 +31,9 @@ class ParticipateInFormTest extends TestCase
         //and an existing thread
         $thread = create(Thread::class);
         //when the user adds a reply to the thread
-        $reply= make(Reply::class);
+        $reply = make(Reply::class);
 
-        $this->post($thread->path() .'/replies', $reply->toArray());
+        $this->post($thread->path() . '/replies', $reply->toArray());
         //then their reply should be visible on the page
         $this->get($thread->path())
             ->assertSee($reply->body);
@@ -44,9 +44,39 @@ class ParticipateInFormTest extends TestCase
     {
         $this->signIn();
         $thread = create(Thread::class);
-        $reply = make(Reply::class, ['body'=> null]);
+        $reply  = make(Reply::class, ['body' => null]);
 
-        $this->post($thread->path() .'/replies', $reply->toArray())
+        $this->post($thread->path() . '/replies', $reply->toArray())
             ->assertSessionHasErrors('body');
+    }
+
+    /** @test */
+    public function unauthorized_users_cannot_delete_replies()
+    {
+        $this->withExceptionHandling();
+
+        $reply = create(Reply::class);
+
+        $this->delete("replies/{$reply->id}")
+            ->assertRedirect('/login');
+
+        $this->signIn()
+            ->delete("replies/{$reply->id}")
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function authorized_users_can_delete_replies()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->signIn();
+
+        $reply = create(Reply::class, ['user_id' => auth()->id()]);
+
+        $this->delete("replies/{$reply->id}")
+        ->assertStatus(302);
+
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
     }
 }
