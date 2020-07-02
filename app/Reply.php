@@ -8,14 +8,14 @@ class Reply extends Model
 {
     use Favoritable, RecordsActivity;
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::deleting(function ($reply) {
-            $reply->favorites->each->delete();
-        });
-    }
+    //public static function boot()
+    //{
+    //    parent::boot();
+    //
+    //    static::deleting(function ($reply) {
+    //        $reply->favorites->each->delete();
+    //    });
+    //}
 
     protected $appends = ['favoritesCount','isFavorited'];
     protected $guarded = [];

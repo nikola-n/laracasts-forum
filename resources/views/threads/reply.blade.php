@@ -10,7 +10,9 @@
                         </a> said {{ $reply->created_at->diffForHumans() }}...
                     </h5>
                     <div>
+                        @auth
                         <favorite :reply="{{ $reply }}"></favorite>
+                        @endauth
 {{--                        <form method="POST" action="/replies/{{$reply->id}}/favorites">--}}
 {{--                            @csrf--}}
 {{--                            <button type="submit" class="btn btn-danger" {{ $reply->isFavorited() ? 'disabled' :  '' }}>--}}
