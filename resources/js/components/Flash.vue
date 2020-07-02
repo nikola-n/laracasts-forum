@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="card-body">
-            <div class="card-header">
+            <div class="card-body">
                 <div class="alert alert-success alert-flash" role="alert" v-show="show">
                     <strong>Success!</strong> {{ body }}
                 </div>

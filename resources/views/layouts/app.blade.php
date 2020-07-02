@@ -32,6 +32,7 @@
     .flex {
         flex: 1;
     }
+    [v-cloack] {display: none;}
 </style>
 <body>
 <div id="app">
