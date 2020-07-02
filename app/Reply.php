@@ -17,6 +17,7 @@ class Reply extends Model
         });
     }
 
+    protected $appends = ['favoritesCount','isFavorited'];
     protected $guarded = [];
 
     //it eager loads the owner anytime you fetch a reply

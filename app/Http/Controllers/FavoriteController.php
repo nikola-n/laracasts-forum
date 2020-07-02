@@ -11,8 +11,9 @@ class FavoriteController extends Controller
 
     public function __construct()
     {
-            $this->middleware('auth');
+        $this->middleware('auth');
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -25,6 +26,11 @@ class FavoriteController extends Controller
         $reply->favorite();
 
         return back();
+    }
+
+    public function destroy(Reply $reply)
+    {
+        $reply->unfavorite();
     }
 
 }
