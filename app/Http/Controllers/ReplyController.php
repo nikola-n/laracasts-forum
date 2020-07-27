@@ -43,18 +43,22 @@ class ReplyController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Channel $channel, Thread $thread, Request $request)
     {
         $this->validate($request, [
-            'body' => 'required'
+            'body' => 'required',
         ]);
-        $thread->addReply([
-            'body' => request('body'),
-            'user_id' => auth()->id()
+        $reply = $thread->addReply([
+            'body'    => request('body'),
+            'user_id' => auth()->id(),
         ]);
+
+        if (request()->expectsJson()) {
+            return $reply->load('owner');
+        }
 
         return back()->with('flash', 'Reply has been created');
     }
@@ -62,7 +66,8 @@ class ReplyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Reply  $reply
+     * @param \App\Reply $reply
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Reply $reply)
@@ -73,7 +78,8 @@ class ReplyController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Reply  $reply
+     * @param \App\Reply $reply
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Reply $reply)
@@ -106,11 +112,11 @@ class ReplyController extends Controller
      */
     public function destroy(Reply $reply)
     {
-       $this->authorize('update', $reply);
+        $this->authorize('update', $reply);
 
         $reply->delete();
 
-        if(request()->expectsJson()){
+        if (request()->expectsJson()) {
             return response(['status' => 'Reply Deleted!']);
         }
         return back();
