@@ -37,6 +37,7 @@ class ParticipateInFormTest extends TestCase
         //then their reply should be visible on the page
         $this->get($thread->path())
             ->assertSee($reply->body);
+        $this->assertEquals(1, $thread->fresh()->replies_count);
     }
 
     /** @test */
@@ -78,6 +79,7 @@ class ParticipateInFormTest extends TestCase
             ->assertStatus(302);
 
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+        $this->assertEquals(0, $reply->thread->fresh()->replies_count);
     }
 
     /** @test */
